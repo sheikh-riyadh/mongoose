@@ -3,6 +3,9 @@ import { model, Schema } from "mongoose";
 
 const app: Application = express();
 
+// Middleware
+app.use(express.json());
+
 const noteSchema = new Schema({
   title: String,
   content: String,
@@ -10,18 +13,56 @@ const noteSchema = new Schema({
 
 const Note = model("Note", noteSchema);
 
-app.post("/create-note", async (req: Request, res: Response) => {
-  const myNote = new Note({
-    title: "Learning mongoose",
-    content: "I am learning mongoose",
+app.get("/note", async (req: Request, res: Response) => {
+  const data = await Note.find({});
+  res.status(200).json({
+    success: true,
+    message: "Retrive data successfuly",
+    data,
   });
+});
 
-  await myNote.save()
+app.get("/note/single/:id", async (req: Request, res: Response) => {
+  const noteID = req.params.id;
+  const data = await Note.findById(noteID);
+
+  res.status(200).json({
+    success: true,
+    message: "Retrive data successfuly",
+    data,
+  });
+});
+
+app.post("/note/create", async (req: Request, res: Response) => {
+  const data = req.body;
+  await Note.create(data);
 
   res.status(201).json({
     success: true,
     message: "Note created successfuly",
-    note: myNote,
+    data,
+  });
+});
+
+app.patch("/note/update/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const data = req.body;
+
+  const response = await Note.findByIdAndUpdate(id, { ...data }, { new: true });
+  res.status(200).json({
+    success: true,
+    message: "Note updated successfuly",
+    data: response,
+  });
+});
+
+app.delete("/note/delete/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const data = await Note.findByIdAndDelete(id);
+  res.status(200).json({
+    success: true,
+    message: "Note deleted successfuly",
+    data,
   });
 });
 
