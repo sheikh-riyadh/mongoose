@@ -27,5 +27,5 @@ const notesSchema = new Schema<INodes>(
 );
 
 
-export const Note = model("Note", notesSchema)
+export const Note = model<INodes>("Note", notesSchema)
 
