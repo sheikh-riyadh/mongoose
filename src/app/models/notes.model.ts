@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
+import { INodes } from "../interfaces/notes.interface";
 
-const notesSchema = new Schema(
+const notesSchema = new Schema<INodes>(
   {
     title: {
       type: String,
@@ -15,7 +16,7 @@ const notesSchema = new Schema(
     },
     pinned: { type: Boolean, default: false },
     tags: {
-      label: { type: String, requred: true },
+      label: { type: String, required: true },
       color: { type: String, default: "gray" },
     },
   },
