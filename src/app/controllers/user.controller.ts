@@ -1,7 +1,35 @@
 import express, { Request, Response } from "express";
 import { User } from "../models/user.model";
+import z from "zod";
+import { IUser, Role } from "../interfaces/user.interface";
 
 export const userRoutes = express.Router();
+
+// const userZodSchema = z.object({
+//   firstName: z.string(),
+//   lastName: z.string(),
+//   email: z.string(),
+//   password: z.string(),
+//   role: z.enum(Role),
+//   address: z.object({
+//     city: z.string(),
+//     street: z.string(),
+//     zip: z.number(),
+//   }),
+// });
+
+const userZodSchema: z.ZodType<IUser> = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+  role: z.enum(Role),
+  address: z.object({
+    city: z.string(),
+    street: z.string(),
+    zip: z.number(),
+  }),
+});
 
 userRoutes.get("/", async (req: Request, res: Response) => {
   const users = await User.find({});
@@ -24,13 +52,21 @@ userRoutes.get("/single-user/:id", async (req: Request, res: Response) => {
 });
 
 userRoutes.post("/create", async (req: Request, res: Response) => {
-  const data = req.body;
-  const response = await User.create(data);
-  res.status(200).json({
-    success: true,
-    message: "Create user successfuly",
-    data: response,
-  });
+  try {
+    const data = await userZodSchema.parseAsync(req.body);
+    const response = await User.create(data);
+    res.status(200).json({
+      success: true,
+      message: "Create user successfuly",
+      data: response,
+    });
+  } catch (error) {
+    res.status(200).json({
+      success: false,
+      message: "error",
+      data: error,
+    });
+  }
 });
 
 userRoutes.patch("/update/:id", async (req: Request, res: Response) => {
