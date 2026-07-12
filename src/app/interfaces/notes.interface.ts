@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface INodes {
   title: string;
   content: string;
@@ -7,4 +9,5 @@ export interface INodes {
     label: string;
     color: string;
   };
+  user: { type: Types.ObjectId };
 }

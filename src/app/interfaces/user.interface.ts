@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export enum Role {
   USER = "user",
   ADMIN = "admin",
@@ -17,3 +19,10 @@ export interface IUser {
   role: Role;
   address: IAddress;
 }
+
+export interface UserIntanceMethod {
+  hashPassword(plainPassword: string):Promise<string>;
+}
+
+
+export type UserModel = Model<IUser,{}, UserIntanceMethod>

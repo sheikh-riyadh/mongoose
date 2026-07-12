@@ -1,5 +1,12 @@
 import { model, Schema } from "mongoose";
-import { IAddress, IUser, Role } from "../interfaces/user.interface";
+import {
+  IAddress,
+  IUser,
+  Role,
+  UserIntanceMethod,
+  UserModel,
+} from "../interfaces/user.interface";
+import { Model } from "mongoose";
 
 const addressSchema = new Schema<IAddress>(
   {
@@ -12,7 +19,7 @@ const addressSchema = new Schema<IAddress>(
   },
 );
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser, UserModel, UserIntanceMethod>(
   {
     firstName: {
       type: String,
@@ -45,4 +52,8 @@ const userSchema = new Schema<IUser>(
   },
 );
 
-export const User = model<IUser>("User", userSchema);
+userSchema.method("hashPassword", async function (plainPassword: string) {
+  console.log(plainPassword);
+});
+
+export const User = model<IUser, UserModel>("User", userSchema);

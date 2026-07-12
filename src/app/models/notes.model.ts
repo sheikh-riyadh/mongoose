@@ -19,6 +19,10 @@ const notesSchema = new Schema<INodes>(
       label: { type: String, required: true },
       color: { type: String, default: "gray" },
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
@@ -26,6 +30,4 @@ const notesSchema = new Schema<INodes>(
   },
 );
 
-
-export const Note = model<INodes>("Note", notesSchema)
-
+export const Note = model<INodes>("Note", notesSchema);
