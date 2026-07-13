@@ -20,9 +20,15 @@ export interface IUser {
   address: IAddress;
 }
 
+// For instance methods
 export interface UserIntanceMethod {
-  hashPassword(plainPassword: string):Promise<string>;
+  hashPassword(password: string): Promise<string>;
 }
 
+export type UserModel = Model<IUser, {}, UserIntanceMethod>;
 
-export type UserModel = Model<IUser,{}, UserIntanceMethod>
+// For statice methods
+
+export interface IUserStaticeMethods extends Model<IUser> {
+  hashPassword(password: string): Promise<string>;
+}

@@ -55,9 +55,10 @@ userRoutes.get("/single-user/:id", async (req: Request, res: Response) => {
 userRoutes.post("/create", async (req: Request, res: Response) => {
   try {
     const data = await userZodSchema.parseAsync(req.body);
-    
-
+    const password = await User.hashPassword(data.password);
+    data.password = password;
     const response = await User.create(data);
+
     res.status(200).json({
       success: true,
       message: "Create user successfuly",
